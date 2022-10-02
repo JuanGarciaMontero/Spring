@@ -2,11 +2,14 @@ package com.example.obrestdatajpa.controller;
 
 import com.example.obrestdatajpa.entities.Book;
 import com.example.obrestdatajpa.repository.BookRepository;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
 import java.util.Optional;
@@ -51,8 +54,9 @@ public class BookController {
 
     // Buscar un sólo libro en base de datos según id
     @GetMapping("/api/books/{id}")
+    @ApiOperation("Buscar un libro por clave primaria id Long")
     //public Book findOneById(@PathVariable Long id){
-    public ResponseEntity<Book> findOneById(@PathVariable Long id){
+    public ResponseEntity<Book> findOneById(@ApiParam("Clave primaria tipo id Long") @PathVariable Long id){
 
         Optional<Book> bookOpt = bookRepository.findById(id); // id=154565547899554
         // Opcion 1. Primeros sin ResponseEntity
@@ -113,6 +117,7 @@ public class BookController {
 
     // Borrar un libro  existente en base de datos
     // No permite Método DELETE
+    @ApiIgnore
     @DeleteMapping("/api/books/{id}")
     public ResponseEntity<Book> delete(@PathVariable Long id){
 
@@ -125,7 +130,7 @@ public class BookController {
 
         return ResponseEntity.noContent().build();
     }
-
+    @ApiIgnore// Ignora el siguiente método para que no salga en API Swagger
     @DeleteMapping("/api/books")
     public ResponseEntity<Book> deleteAll(){
         log.info("REST Request for delete all books");
