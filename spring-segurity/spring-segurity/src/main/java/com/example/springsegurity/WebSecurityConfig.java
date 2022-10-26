@@ -8,14 +8,10 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.firewall.HttpFirewall;
 import org.springframework.security.web.firewall.StrictHttpFirewall;
-
-import java.util.function.Function;
 
 @Configuration
 @EnableWebSecurity
@@ -32,7 +28,7 @@ public class WebSecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeRequests()
                 .antMatchers("/hola").permitAll()
-                .antMatchers("/bootstrap").hasRole("ADMIN")
+                //.antMatchers("/bootstrap").hasRole("ADMIN")
                 .anyRequest().authenticated()
                 //.authenticated()
                 .and()
@@ -63,22 +59,16 @@ public class WebSecurityConfig {
     @Bean
     public UserDetailsService userDetailsService() {
         UserDetails user =  User.builder()
-                //.passwordEncoder((Function<String, String>) new BCryptPasswordEncoder())
                 .username("user")
-                .password(passwordEncoder().encode("password"))
+                .password("password")
                 .roles("USER")
                 .build();
         UserDetails admin = User.builder()
                 .username("admin")
-                //.password("password")
-                .password(passwordEncoder().encode("password"))
+                .password("password")
                 .roles("ADMIN", "USER")
                 .build();
         return new InMemoryUserDetailsManager(user, admin);
-    }
-    @Bean
-    public PasswordEncoder passwordEncoder(){
-        return new BCryptPasswordEncoder();
     }
 
 
